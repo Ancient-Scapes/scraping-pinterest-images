@@ -3,50 +3,15 @@ const axios = require('axios');
 const fs = require('fs');
 require('dotenv').config();
 
-async function main(){
-  const imagesJson = await fetchImagesJson();
-  // TODO 消す
-  // const imagesJson = await fetchImagesJsonLocal();
+async function main(searchKeyword){
+  const imagesJson = await fetchImagesJson(searchKeyword);
   const imagesInfo = extractionImageInfo(imagesJson);
-  
-  downloadImages(imagesInfo);
+  downloadImages(imagesInfo, searchKeyword);
 }
 
-// TODO ローカルから読む時用
-function fetchImagesJsonLocal() {
-  return require(process.env.PWD + '/sample.json');
-}
-
-function extractionImageInfo(json) {
-  var imagesInfo = [];
-
-  Object.keys(json.pins).forEach((key) => {
-    const imageObj = json.pins[key];
-    imagesInfo.push({
-      id: imageObj.id,
-      description: imageObj.description,
-      image_url: imageObj.images.orig.url,
-      source_url: imageObj.link
-    });
-  });
-  return imagesInfo;
-}
-
-function downloadImages(images) {
-  const dir = process.env.PWD + '/img/';
-
-  Object.keys(images).forEach(async (key) => {
-    const res = await axios.get(images[key].image_url, {
-      responseType: 'arraybuffer'
-    });
-    fs.writeFileSync(dir + images[key].id + '.jpg', new Buffer(res.data), 'binary');
-  });
-}
-
-async function fetchImagesJson() {
-  // TODO URLは引数から動的に生成できるようにする
-  // 今は固定で女子高生 太ももの検索
-  const URL = 'https://www.pinterest.jp/search/pins/?q=%E5%A5%B3%E5%AD%90%E9%AB%98%E7%94%9F%20%E5%A4%AA%E3%82%82%E3%82%82';
+async function fetchImagesJson(searchKeyword) {
+  const query = new URLSearchParams([['q', searchKeyword]]).toString();
+  const URL = 'https://www.pinterest.jp/search/pins/?' + query;
 
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
@@ -61,6 +26,42 @@ async function fetchImagesJson() {
 
   browser.close();
   return imagesJson;
+}
+
+function extractionImageInfo(json) {
+  var imagesInfo = [];
+
+  Object.keys(json.pins).forEach((key) => {
+    const imageObj = json.pins[key];
+
+    imagesInfo.push({
+      id: imageObj.id,
+      description: imageObj.description,
+      image_url: imageObj.images.orig.url,
+      source_url: imageObj.link
+    });
+  });
+
+  return imagesInfo;
+}
+
+function downloadImages(images, searchKeyword) {
+  const imgDir = process.env.PWD + '/img';
+  const dirSearchKeyword = imgDir + '/' + searchKeyword;
+
+  // imgフォルダの作成
+  if (!fs.existsSync(imgDir)) fs.mkdirSync(imgDir);
+  // 検索キーワードのフォルダ作成
+  if (!fs.existsSync(dirSearchKeyword)) fs.mkdirSync(dirSearchKeyword);
+
+  Object.keys(images).forEach(async (key) => {
+    const res = await axios.get(images[key].image_url, {
+      responseType: 'arraybuffer'
+    });
+    const filename = images[key].description + '_' + images[key].id;
+    const ext = '.jpg';
+    fs.writeFileSync(dirSearchKeyword + '/' +  filename + ext, new Buffer(res.data), 'binary');
+  });
 }
 
 async function login(page) {
@@ -84,4 +85,4 @@ async function sleep(delay) {
   return new Promise(resolve => setTimeout(resolve, delay));
 }
 
-main();
+main('女子高生 太もも');
