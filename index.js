@@ -18,6 +18,7 @@ async function fetchImagesJson(searchKeyword) {
   await page.goto(URL);
 
   await login(page);
+  console.log('ログイン成功');
 
   const imagesJson = await page.evaluate(() => {
     const json = document.querySelector('#initial-state').innerHTML;
@@ -53,6 +54,8 @@ function downloadImages(images, searchKeyword) {
   if (!fs.existsSync(imgDir)) fs.mkdirSync(imgDir);
   // 検索キーワードのフォルダ作成
   if (!fs.existsSync(dirSearchKeyword)) fs.mkdirSync(dirSearchKeyword);
+  
+  console.log('ダウンロード開始');
 
   Object.keys(images).forEach(async (key) => {
     const res = await axios.get(images[key].image_url, {
@@ -61,6 +64,7 @@ function downloadImages(images, searchKeyword) {
     const filename = images[key].description + '_' + images[key].id;
     const ext = '.jpg';
     fs.writeFileSync(dirSearchKeyword + '/' +  filename + ext, new Buffer(res.data), 'binary');
+    console.log('✅|ダウンロード完了:' + filename)
   });
 }
 
@@ -78,11 +82,11 @@ async function login(page) {
 
   // JSONが更新されるまで待つ
   // TODO ここは無理やり待ってるけど多分Promiseでいい書き方がある
-  await sleep(10000);
+  await sleep(7500);
 }
 
 async function sleep(delay) {
   return new Promise(resolve => setTimeout(resolve, delay));
 }
 
-main('女子高生 太もも');
+main('女子高生 太もも');
