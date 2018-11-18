@@ -82,7 +82,7 @@ async function login(page) {
 
   // JSONが更新されるまで待つ
   // TODO ここは無理やり待ってるけど多分Promiseでいい書き方がある
-  await sleep(7500);
+  await sleep(10000);
 }
 
 async function sleep(delay) {
