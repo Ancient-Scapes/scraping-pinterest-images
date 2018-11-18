@@ -5,7 +5,7 @@ require('dotenv').config();
 
 async function main(searchKeyword){
   const imagesJson = await fetchImagesJson(searchKeyword);
-  const imagesInfo = extractionImageInfo(imagesJson);
+  const imagesInfo = extractionImagesInfo(imagesJson);
   downloadImages(imagesInfo, searchKeyword);
 }
 
@@ -29,7 +29,7 @@ async function fetchImagesJson(searchKeyword) {
   return imagesJson;
 }
 
-function extractionImageInfo(json) {
+function extractionImagesInfo(json) {
   var imagesInfo = [];
 
   Object.keys(json.pins).forEach((key) => {
@@ -37,7 +37,7 @@ function extractionImageInfo(json) {
 
     imagesInfo.push({
       id: imageObj.id,
-      description: imageObj.description,
+      description: imageObj.description ? imageObj.description : '',
       image_url: imageObj.images.orig.url,
       source_url: imageObj.link
     });
@@ -89,4 +89,4 @@ async function sleep(delay) {
   return new Promise(resolve => setTimeout(resolve, delay));
 }
 
-main('女子高生 太もも');
+main('女子高生 太もも');
