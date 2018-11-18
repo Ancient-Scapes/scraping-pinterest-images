@@ -64,7 +64,7 @@ function downloadImages(images, searchKeyword) {
     const filename = images[key].description + '_' + images[key].id;
     const ext = '.jpg';
     fs.writeFileSync(dirSearchKeyword + '/' +  filename + ext, new Buffer(res.data), 'binary');
-    console.log('✅|ダウンロード完了:' + filename)
+    console.log('✅|ダウンロード完了:' + filename);
   });
 }
 
