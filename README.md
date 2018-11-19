@@ -16,6 +16,16 @@ password example123456
 
 
 ## Usage
+```zsh
+node index.js "search Keyword"
 ```
-node index.js
+
+## Example
+
+```zsh
+node index.js "モンスターハンターダブルクロス"
 ```
+
+## TODO
+
+- scraping more images
