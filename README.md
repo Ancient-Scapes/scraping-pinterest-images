@@ -29,3 +29,4 @@ node index.js "モンスターハンターダブルクロス"
 ## TODO
 
 - scraping more images
+- search result not exists case
