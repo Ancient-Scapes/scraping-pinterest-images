@@ -20,7 +20,6 @@ async function fetchImagesJson(searchKeyword) {
   await page.goto(URL);
 
   await login(page);
-  console.log('ログイン成功');
 
   const imagesJson = await page.evaluate(() => {
     const json = document.querySelector('#initial-state').innerHTML;
@@ -81,6 +80,8 @@ async function login(page) {
   // ログインする
   const loginSelector = 'body > div:nth-child(1) > div > div > div > div > div:nth-child(6) > div > div > div > div > div:nth-child(1) > div:nth-child(4) > div:nth-child(1) > form > div:nth-child(3) > button > div';
   await page.click(loginSelector);
+
+  console.log('ログイン成功');
 
   // JSONが更新されるまで待つ
   // TODO ここは無理やり待ってるけど多分Promiseでいい書き方がある
