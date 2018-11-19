@@ -3,7 +3,9 @@ const axios = require('axios');
 const fs = require('fs');
 require('dotenv').config();
 
-async function main(searchKeyword){
+async function main(){
+  const searchKeyword = require('minimist')(process.argv)._[2];
+
   const imagesJson = await fetchImagesJson(searchKeyword);
   const imagesInfo = extractionImagesInfo(imagesJson);
   downloadImages(imagesInfo, searchKeyword);
@@ -89,4 +91,4 @@ async function sleep(delay) {
   return new Promise(resolve => setTimeout(resolve, delay));
 }
 
-main('女子高生 太もも');
+main();
