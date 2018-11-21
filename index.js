@@ -56,19 +56,19 @@ function downloadImages(images, searchKeyword) {
   // 検索キーワードのフォルダ作成
   if (!fs.existsSync(dirSearchKeyword)) fs.mkdirSync(dirSearchKeyword);
   
-  console.log('⬇️ | ダウンロード開始');
+  console.log('⬇️  ダウンロード開始');
 
   Object.keys(images).forEach(async (key) => {
     const res = await axios.get(images[key].image_url, {
       responseType: 'arraybuffer'
-    }).catch((e) => console.log('😇 | 何らかの原因で画像が取得できませんでした。'));
+    }).catch((e) => console.log('😇  何らかの原因で画像が取得できませんでした。'));
     const filename = images[key].description + '_' + images[key].id;
     const ext = '.jpg';
     fs.writeFileSync(dirSearchKeyword + '/' +  filename + ext, new Buffer.from(res.data), 'binary');
-    console.log('✅ | ダウンロード完了:' + filename);
+    console.log('✅  ダウンロード完了:' + filename);
   });
-  
-  console.log('🚀 | 完了しました！');
+
+  console.log('🚀  完了しました！');
 }
 
 async function login(page) {
@@ -83,7 +83,7 @@ async function login(page) {
   const loginSelector = 'body > div:nth-child(1) > div > div > div > div > div:nth-child(6) > div > div > div > div > div:nth-child(1) > div:nth-child(4) > div:nth-child(1) > form > div:nth-child(3) > button > div';
   await page.click(loginSelector);
 
-  console.log('✨ | ログイン成功');
+  console.log('✨  ログイン成功');
 
   // JSONが更新されるまで待つ
   // TODO ここは無理やり待ってるけど多分Promiseでいい書き方がある
