@@ -67,6 +67,7 @@ function downloadImages(images, searchKeyword) {
     fs.writeFileSync(dirSearchKeyword + '/' +  filename + ext, new Buffer.from(res.data), 'binary');
     console.log('✅ | ダウンロード完了:' + filename);
   });
+  
   console.log('🚀 | 完了しました！');
 }
 
