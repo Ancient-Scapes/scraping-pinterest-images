@@ -38,7 +38,7 @@ function extractionImagesInfo(json) {
 
     imagesInfo.push({
       id: imageObj.id,
-      description: imageObj.description ? imageObj.description : '',
+      description: imageObj.description ? imageObj.description.split('/').join('_') : '',
       image_url: imageObj.images.orig.url,
       source_url: imageObj.link
     });
