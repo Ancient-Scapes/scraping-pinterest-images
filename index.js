@@ -47,7 +47,7 @@ function extractionImagesInfo(json) {
   return imagesInfo;
 }
 
-function downloadImages(images, searchKeyword) {
+async function downloadImages(images, searchKeyword) {
   const imgDir = process.env.PWD + '/img';
   const dirSearchKeyword = imgDir + '/' + searchKeyword;
 
@@ -61,14 +61,17 @@ function downloadImages(images, searchKeyword) {
   Object.keys(images).forEach(async (key) => {
     const res = await axios.get(images[key].image_url, {
       responseType: 'arraybuffer'
-    }).catch((e) => console.log('😇  何らかの原因で画像が取得できませんでした。'));
+    }).catch((e) => {
+      console.log('😇  何らかの原因で画像が取得できませんでした。');
+      console.log('⚠️  エラー内容' + e);
+      return;
+    });
+    
     const filename = images[key].description + '_' + images[key].id;
     const ext = '.jpg';
     fs.writeFileSync(dirSearchKeyword + '/' +  filename + ext, new Buffer.from(res.data), 'binary');
     console.log('✅  ダウンロード完了:' + filename);
   });
-
-  console.log('🚀  完了しました！');
 }
 
 async function login(page) {
